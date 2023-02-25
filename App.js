@@ -1,26 +1,34 @@
 import React from "react"
-import { StyleSheet } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import { Provider } from "react-redux"
-import AppContainer from "./src/AppContainer"
-import Colors from "./src/constants/Colors"
 import store from "./src/redux"
+import AppColors from "./src/constants/Colors"
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import GameScreen from "./src/screens/Gamescreen"
+import QuestionScreen from "./src/screens/QuestionScreen"
+
+const Stack = createNativeStackNavigator()
 
 const App = () => {
 	return (
-		<SafeAreaProvider style={styles.container}>
-			<SafeAreaView mode="margin">
+		<NavigationContainer>
+			<SafeAreaProvider style={styles.container}>
 				<Provider store={store}>
-					<AppContainer />
+					<Stack.Navigator initialRouteName="Home">
+						<Stack.Screen name="Home" component={GameScreen} />
+						<Stack.Screen name="Questions" component={QuestionScreen} />
+					</Stack.Navigator>
 				</Provider>
-			</SafeAreaView>
-		</SafeAreaProvider>
+			</SafeAreaProvider>
+		</NavigationContainer>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: Colors.app_bg
+		backgroundColor: AppColors.app_bg
 	}
 })
 

@@ -1,17 +1,28 @@
 import React, { useCallback } from "react"
-import { FlatListHeight } from "../constants/Styles"
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigation } from "@react-navigation/native"
+import CategoryTile from "../components/CategoryTile"
+import { FlatListHeight } from "../constants/Styles"
+import { updateSelectedCategory } from "../redux/reducers/gameReducer"
 
-const GameScreen = () => {
+function GameScreen() {
 	const dispatch = useDispatch()
+	const navigation = useNavigation()
 
 	const { categories } = useSelector(state => state.game)
 
-	const onCardPressed = useCallback(console.log("Item clicked"))
+	const onCardPressed = useCallback(itemId => {
+		const clickedCategory = categories.find(element => element.id === itemId)
+
+		console.log(clickedCategory)
+		dispatch(updateSelectedCategory(clickedCategory))
+
+		navigation.navigate("Questions")
+	})
 
 	const renderItem = ({ item }) => (
-		<Text onCardClicked={onCardPressed}>{item.name}</Text>
+		<CategoryTile {...item} onCardClicked={onCardPressed} />
 	)
 
 	const verticalItemSeparator = () => (
@@ -28,7 +39,7 @@ const GameScreen = () => {
 				numColumns={2}
 				data={categories}
 				renderItem={renderItem}
-				keyExtractor={item => "_" + item.id}
+				keyExtractor={item => `_${item.id}`}
 			/>
 		</View>
 	)
